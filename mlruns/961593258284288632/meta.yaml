@@ -1,0 +1,6 @@
+artifact_location: file:///C:/Belajar%20Python/MLOps/mlruns/961593258284288632
+creation_time: 1750925239006
+experiment_id: '961593258284288632'
+last_update_time: 1750925239006
+lifecycle_stage: active
+name: PyTorch LeNet5 MNIST

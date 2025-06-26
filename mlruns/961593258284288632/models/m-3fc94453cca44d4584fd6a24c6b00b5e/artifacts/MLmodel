@@ -1,0 +1,23 @@
+artifact_path: file:///C:/Belajar%20Python/MLOps/mlruns/961593258284288632/models/m-3fc94453cca44d4584fd6a24c6b00b5e/artifacts
+flavors:
+  python_function:
+    config:
+      device: null
+    data: data
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.pytorch
+    pickle_module_name: mlflow.pytorch.pickle_module
+    python_version: 3.10.7
+  pytorch:
+    code: null
+    model_data: data
+    pytorch_version: 2.7.1+cpu
+mlflow_version: 3.1.1
+model_id: m-3fc94453cca44d4584fd6a24c6b00b5e
+model_size_bytes: 255553
+model_uuid: m-3fc94453cca44d4584fd6a24c6b00b5e
+prompts: null
+run_id: 18e5e35e87904ac1b11ac8768355a079
+utc_time_created: '2025-06-26 09:14:27.885162'

@@ -1,0 +1,23 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: src/train.py
+      hash: md5
+      md5: 58f358c0d12394af19d483946ec5ff3b
+      size: 6175
+    params:
+      params.yaml:
+        train.batch_size: 32
+        train.epochs: 5
+        train.learning_rate: 0.0001
+    outs:
+    - path: models/lenet5.pth
+      hash: md5
+      md5: 274981b2a075b2c1c6b5d0ab86c80fd0
+      size: 250549
+    - path: reports/metrics.json
+      hash: md5
+      md5: 7475f15f224085f3eb779f0bfb2b4106
+      size: 50
