@@ -1,0 +1,8 @@
+data:
+  # No data-specific params needed for MNIST as it's auto-downloaded
+
+train:
+  epochs: 10
+  batch_size: 32
+  learning_rate: 0.001
+  dropout_rate: 0.2

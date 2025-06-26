@@ -1,0 +1,15 @@
+stages:
+  train:
+    cmd: python src/train.py
+    deps:
+      - src/train.py
+    params:
+      - train.epochs
+      - train.batch_size
+      - train.learning_rate
+    # Update the output to a single file, which is common for PyTorch models
+    outs:
+      - models/lenet5.pth
+    metrics:
+      - reports/metrics.json:
+          cache: false

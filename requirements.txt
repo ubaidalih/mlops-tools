@@ -1,0 +1,7 @@
+torch
+torchvision
+mlflow
+dvc[s3]
+pandas
+pyyaml
+scikit-learn
