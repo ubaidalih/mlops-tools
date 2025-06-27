@@ -11,6 +11,7 @@ import mlflow
 import mlflow.pytorch
 
 # --- 1. Model Definition (LeNet-5) ---
+# This class defines the neural network architecture.
 class LeNet5(nn.Module):
     """A classic LeNet-5 architecture for MNIST."""
     def __init__(self):
@@ -39,6 +40,7 @@ class LeNet5(nn.Module):
         return x
 
 # --- 2. Helper Functions ---
+# This function prepares the MNIST data and makes it available through PyTorch's DataLoader.
 def get_data_loaders(batch_size):
     """Loads MNIST and provides PyTorch DataLoaders."""
     transform = transforms.Compose([
@@ -53,25 +55,26 @@ def get_data_loaders(batch_size):
     
     return train_loader, test_loader
 
-def evaluate_model(model, test_loader, device):
-    """Evaluates the model on the test set."""
+# This function evaluates the model's performance on a given dataset.
+def evaluate_model(model, data_loader, device):
+    """Evaluates the model on a given data loader (train or test)."""
     model.eval() # Set model to evaluation mode
-    test_loss = 0
+    loss = 0
     correct = 0
     criterion = nn.CrossEntropyLoss()
     with torch.no_grad():
-        for data, target in test_loader:
+        for data, target in data_loader:
             data, target = data.to(device), target.to(device)
             output = model(data)
-            test_loss += criterion(output, target).item()
+            loss += criterion(output, target).item() * data.size(0)
             pred = output.argmax(dim=1, keepdim=True)
             correct += pred.eq(target.view_as(pred)).sum().item()
     
-    test_loss /= len(test_loader.dataset)
-    accuracy = 100. * correct / len(test_loader.dataset)
-    return test_loss, accuracy
+    loss /= len(data_loader.dataset)
+    accuracy = 100. * correct / len(data_loader.dataset)
+    return loss, accuracy
 
-
+# --- MAIN FUNCTION ---
 def main():
     # --- Load Parameters ---
     with open("params.yaml") as f:
@@ -89,7 +92,7 @@ def main():
         
         # Log parameters
         mlflow.log_params(params['train'])
-        mlflow.log_param("device", device)
+        mlflow.log_param("device", str(device))
 
         # --- TensorBoard Setup ---
         writer = SummaryWriter(log_dir=f"reports/logs/{run_id}")
@@ -99,6 +102,12 @@ def main():
         model = LeNet5().to(device)
         optimizer = optim.Adam(model.parameters(), lr=params['train']['learning_rate'])
         criterion = nn.CrossEntropyLoss()
+
+        # --- NEW: Log Model Graph to TensorBoard ---
+        # We need a sample input to trace the graph. We'll get one batch from the data loader.
+        images, _ = next(iter(train_loader))
+        writer.add_graph(model, images.to(device))
+        print("Model graph logged to TensorBoard.")
 
         # --- Training Loop ---
         print("Starting training...")
@@ -119,6 +128,12 @@ def main():
             writer.add_scalar('Accuracy/Train', train_acc, epoch)
             writer.add_scalar('Loss/Test', test_loss, epoch)
             writer.add_scalar('Accuracy/Test', test_acc, epoch)
+
+            # --- NEW: Log Histograms for Weights and Biases ---
+            for name, param in model.named_parameters():
+                writer.add_histogram(f'Weights/{name}', param, epoch)
+                if param.grad is not None:
+                    writer.add_histogram(f'Gradients/{name}', param.grad, epoch)
             
             print(f"Epoch {epoch+1}/{params['train']['epochs']} | "
                   f"Test Loss: {test_loss:.4f} | Test Acc: {test_acc:.2f}%")
@@ -153,5 +168,5 @@ def main():
 
         print("\nExperiment run logged successfully.")
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

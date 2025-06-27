@@ -1,0 +1,10 @@
+artifact_location: file:///C:/Belajar%20Python/MLOps/mlruns/961593258284288632/models/m-26d24a7dfa894db3ac7b947fd3b14e6a/artifacts
+creation_timestamp: 1751021828302
+experiment_id: '961593258284288632'
+last_updated_timestamp: 1751021849753
+model_id: m-26d24a7dfa894db3ac7b947fd3b14e6a
+model_type: null
+name: model
+source_run_id: 20dea29ec4c0468e92e46a9b3d46f113
+status: 2
+status_message: null
